@@ -1,0 +1,30 @@
+Como requisitos funcionais desse sistemas, podemos citar:
+
+1: Receber Doações e Cadastrar Doadores
+
+O sistema deve permitir o cadastro de doadores online, incluindo informações de identificação e tipo da doação.
+Deve ser possível cadastrar doadores individuais e empresas/instituições.
+
+2: Registrar Doações:
+
+O sistema deve permitir o registro de doações em dinheiro, bens materiais (alimentos, roupas, etc.). Para cada doação, o sistema deve registrar informações como data, valor, tipo de doação, nome do doador.
+
+3: Calcular Total de Doações em Dinheiro:
+
+O sistema deve apresentar o total de doações em dinheiro recebidas em tempo real e fazer dessa informação aberta ao público
+
+4:  Apresentar Total de Doações em Bens Materiais:
+
+O sistema deve apresentar o total de doações de bens materiais recebidas, categorizadas por tipo de bem (alimentos, roupas, etc.) e fazer dessa informação aberta ao público
+
+5: Criar Banco de Dados Seguro:
+
+O sistema deve criar um banco de dados seguro para armazenar todas as informações de doações. O acesso ao banco de dados deve ser restrito a usuários autorizados, com diferentes níveis de permissão.
+
+6: Gerar Relatórios:
+
+O sistema deve permitir a geração de relatórios personalizados sobre as doações recebidas, contendo informações como doadores, valores, tipos de doações, datas.
+
+7: Salvar Histórico de Doações:
+
+O sistema deve manter um histórico completo de todas as doações recebidas, incluindo doações finalizadas e em andamento.
