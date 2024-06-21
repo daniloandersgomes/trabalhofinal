@@ -1,0 +1,160 @@
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class DonationManager {
+    private List<Donation> donations;
+    private static final String DONATIONS_FILE = "donations.txt";
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+    public DonationManager() {
+        donations = new ArrayList<>();
+        loadDonations();
+    }
+
+    public void addDonation(String type, double amount, Date date) {
+        Donation donation = new Donation(type, amount, date);
+        donations.add(donation);
+        saveDonations();
+    }
+
+    public double calculateTotalDonations() {
+        double total = 0;
+        for (Donation donation : donations) {
+            total += donation.getAmount();
+        }
+        return total;
+    }
+
+    public List<Donation> getDonations() {
+        return donations;
+    }
+
+    private void loadDonations() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(DONATIONS_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                String type = parts[0];
+                double amount = Double.parseDouble(parts[1]);
+                Date date = sdf.parse(parts[2]);
+                donations.add(new Donation(type, amount, date));
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Donations file not found. A new file will be created.");
+        } catch (Exception e) {
+            System.out.println("Error loading donations: " + e.getMessage());
+        }
+    }
+
+    private void saveDonations() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(DONATIONS_FILE))) {
+            for (Donation donation : donations) {
+                writer.write(donation.getType() + "," + donation.getAmount() + "," + sdf.format(donation.getDate()));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving donations: " + e.getMessage());
+        }
+    }
+}
+
+
+-------------------------------------------------------------------------------------------------------------
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        DonationManager manager = new DonationManager();
+        Scanner scanner = new Scanner(System.in);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        while (true) {
+            System.out.println("1. Receive Donation");
+            System.out.println("2. Calculate Total Donations");
+            System.out.println("3. Show All Donations");
+            System.out.println("4. Exit");
+            System.out.print("Choose an option: ");
+
+            int option = scanner.nextInt();
+            scanner.nextLine();  // Consume the newline
+
+            if (option == 1) {
+                System.out.print("Donation Type (money, food, clothes, etc.): ");
+                String type = scanner.nextLine();
+                System.out.print("Amount: ");
+                while (!scanner.hasNextDouble()) {
+                    System.out.println("Please enter a valid numeric value for the amount.");
+                    scanner.next();
+                }
+                double amount = scanner.nextDouble();
+                scanner.nextLine();  // Consume the newline
+                System.out.print("Donation Date (dd/MM/yyyy): ");
+                String dateString = scanner.nextLine();
+
+                try {
+                    Date date = sdf.parse(dateString);
+                    manager.addDonation(type, amount, date);
+                    System.out.println("Donation successfully recorded!");
+                } catch (ParseException e) {
+                    System.out.println("Invalid date. Please try again.");
+                }
+            } else if (option == 2) {
+                double total = manager.calculateTotalDonations();
+                System.out.println("Total Donations: " + total);
+            } else if (option == 3) {
+                for (Donation donation : manager.getDonations()) {
+                    System.out.println(donation);
+                }
+            } else if (option == 4) {
+                break;
+            } else {
+                System.out.println("Invalid option. Please try again.");
+            }
+        }
+
+        scanner.close();
+    }
+}
+
+----------------------------------------------------------------------------------
+
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
+public class Donation {
+    private String type;
+    private double amount;
+    private Date date;
+
+    public Donation(String type, double amount, Date date) {
+        this.type = type;
+        this.amount = amount;
+        this.date = date;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    @Override
+    public String toString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return "Donation [type=" + type + ", amount=" + amount + ", date=" + sdf.format(date) + "]";
+    }
+}
